@@ -8,10 +8,8 @@ import java.sql.Statement;
 
 public class StartUp {
 
+	//TODO: Change StartUp to get all Accounts from DB and save them in Map of AccountManager
 	public static void main(String[] args) {
-		
-		// Creates a database connection which only lasts as long as this try statement is active
-		// Afterwards, the connection is closed
         try (
           Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
           Statement statement = connection.createStatement();
@@ -19,19 +17,26 @@ public class StartUp {
         {
           statement.setQueryTimeout(30);  // If a query isn't answered in 30 Seconds: Throws an error
           
-          statement.executeUpdate("drop table if exists Account"); // This is dumb, and should NOT be in the real code later on
-          statement.executeUpdate("CREATE TABLE Account ("
-          		+ "id INTEGER PRIMARY KEY,"
-          		+ " name STRING)"); 
-          statement.executeUpdate("insert into Account values(1, 'Tralalero')");
-          statement.executeUpdate("insert into Account values(2, 'Ambalabu')");
+          statement.executeUpdate("drop table if exists Accounts"); // This is dumb, and should NOT be in the real code later on
+          statement.executeUpdate("drop table if exists Account");
+          statement.executeUpdate("CREATE TABLE Accounts ("
+          		+ "id STRING PRIMARY KEY,"
+          		+ "plattform STRING NOT NULL,"
+          		+ "name STRING,"
+          		+ "email STRING NOT NULL,"
+          		+ "password STRING NOT NULL,"
+          		+ "salt STRING NOT NULL)"); 
+          
+          // this is a joke
+          statement.executeUpdate("insert into Accounts values('1', 'twitter.com', 'noel', 'sbdt@gmail.com', '1234', '1')");
           
           ResultSet rs = statement.executeQuery("SELECT * "
-          		+ "FROM Account "); // rs yields all the rows obtained by this query
+          		+ "FROM Accounts "); // rs yields all the rows obtained by this query
           
           while(rs.next()) { //prints out everything that rs yields
             System.out.println("name = " + rs.getString("name"));
             System.out.println("id = " + rs.getInt("id"));
+            System.out.println("password = " + rs.getInt("password"));
           }
         }
         
